@@ -1,0 +1,15 @@
+name: Users API Test
+
+requests:
+  - name: Get Users
+    method: GET
+    endpoint: /api/users
+    weight: 3
+
+  - name: Create User
+    method: POST
+    endpoint: /api/users
+    payload:
+      name: test
+      role: user
+    weight: 1
