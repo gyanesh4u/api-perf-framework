@@ -1,11 +1,45 @@
 import requests
 
 def get_jwt_token(config):
-    url = config["host"] + config["auth"]["token_url"]
-    payload = {
-        "username": config["auth"]["username"],
-        "password": config["auth"]["password"]
-    }
-    response = requests.post(url, json=payload)
-    response.raise_for_status()
-    return response.json().get("access_token", "")
+    """
+    Obtain JWT token from the configured token endpoint.
+    
+    Args:
+        config: Configuration dictionary containing host, auth details
+        
+    Returns:
+        JWT access token string
+        
+    Raises:
+        ValueError: If required config keys are missing
+        Exception: If token request fails
+    """
+    # Validate required configuration
+    required_keys = ["host", "auth"]
+    for key in required_keys:
+        if key not in config:
+            raise ValueError(f"Missing required config key: {key}")
+    
+    auth_config = config["auth"]
+    required_auth_keys = ["token_url", "username", "password"]
+    for key in required_auth_keys:
+        if key not in auth_config:
+            raise ValueError(f"Missing required auth config key: {key}")
+    
+    try:
+        url = config["host"] + auth_config["token_url"]
+        payload = {
+            "username": auth_config["username"],
+            "password": auth_config["password"]
+        }
+        response = requests.post(url, json=payload, timeout=10)
+        response.raise_for_status()
+        token = response.json().get("access_token", "")
+        
+        if not token:
+            raise ValueError("No access_token in response")
+        
+        return token
+    except requests.RequestException as e:
+        raise Exception(f"Failed to obtain JWT token: {e}")
+
