@@ -5,13 +5,15 @@ A comprehensive performance testing framework built on Locust for load testing A
 ## Features
 
 🚀 **Production-Ready:**
+- ✅ **Python 3.7+** - Fully compatible with Python 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13+
 - ✅ Weighted task distribution for realistic load patterns
 - ✅ Automatic JWT token management and refresh
 - ✅ Comprehensive error handling and validation
 - ✅ SLA validation for both response time and error rates
-- ✅ Beautiful HTML and CSV report generation
+- ✅ Beautiful interactive HTML reports with Chart.js graphs
+- ✅ Timestamped report folders for historical tracking
 - ✅ YAML-based configuration for easy management
-- ✅ Python 3.7+ support with modern best practices
+- ✅ Modern Python 3 features (f-strings, context managers, pathlib)
 
 ## Table of Contents
 - [Features](#features)
@@ -232,6 +234,39 @@ Run manual validation:
 python runner/validate.py
 ```
 
+### Report Organization
+
+Each test run automatically creates a **timestamped folder** for reports:
+
+```bash
+# Run 1
+python runner/run.py
+# Creates: reports/2026-02-08_13-45-23/
+
+# Run 2  
+python runner/run.py
+# Creates: reports/2026-02-08_13-47-58/
+
+# All reports are organized by date and time
+ls reports/
+# 2026-02-08_13-45-23/
+# 2026-02-08_13-47-58/
+```
+
+Access the latest report:
+```bash
+# Open latest performance report
+open reports/*/performance_report.html  # macOS - opens most recent
+firefox reports/2026-02-08_13-45-23/performance_report.html  # Linux
+start reports/2026-02-08_13-45-23/performance_report.html  # Windows
+```
+
+Benefits of timestamped folders:
+- 📅 **Historical Tracking**: Keep all test results with date/time
+- 🔍 **Easy Comparison**: Compare performance across multiple runs
+- 📊 **Trend Analysis**: See how performance changes over time
+- 🛡️ **Safety**: No reports are overwritten between runs
+
 ## Test Scenarios
 
 Test scenarios are defined in YAML format under `scenarios/users_api.yaml`:
@@ -288,17 +323,41 @@ The framework validates test results against these thresholds and reports any vi
 
 ### 📊 Generated Reports
 
-Test reports are generated automatically in the `reports/` directory after each test run:
+Test reports are generated automatically in timestamped folders under the `reports/` directory after each test run:
+
+#### Report Folder Structure
+```
+reports/
+├── 2026-02-08_13-45-23/    # First test run (YYYY-MM-DD_HH-MM-SS)
+│   ├── performance_report.html
+│   ├── performance_report.json
+│   ├── report.html
+│   └── results_stats.csv
+├── 2026-02-08_13-47-58/    # Second test run
+│   ├── performance_report.html
+│   ├── performance_report.json
+│   ├── report.html
+│   └── results_stats.csv
+└── ...                      # More timestamped folders for each run
+```
+
+Each run creates a **unique timestamped folder** with format `YYYY-MM-DD_HH-MM-SS`, allowing you to keep a complete historical archive of all performance tests.
 
 #### 1. **performance_report.html** ⭐ **[MAIN REPORT]**
 A beautiful, interactive HTML report featuring:
-- **Executive Summary**: 6 color-coded metric cards
-- **Detailed Metrics Table**: Per-endpoint breakdown
-- **Response Time Distribution**: Min, Avg, P95, P99, Max
+- **Executive Summary**: 6 color-coded metric cards (Total Requests, Success Rate, Failures, Avg/P95/Max Response Time)
+- **Interactive Charts** (using Chart.js):
+  - 📊 **Requests Distribution**: Pie chart showing requests per endpoint
+  - 📉 **Response Time Trends**: Line chart comparing Avg, P95, P99, Max across endpoints
+  - ⏱️ **Response Time Breakdown**: Bar chart for each endpoint (Min/Avg/P95/P99/Max)
+  - ✅ **Success Rate by Endpoint**: Bar chart with percentage breakdown
+  - 📈 **Request Count by Method**: Bar chart showing GET/POST/PUT/DELETE distribution
+- **Detailed Metrics Table**: Per-endpoint breakdown with all statistics
 - **HTTP Method Badges**: Color-coded GET/POST/PUT/DELETE
 - **Status Indicators**: Green/Yellow/Red for quick assessment
 - **Modern Design**: Gradient background, responsive layout
-- **Mobile Friendly**: Works on phones and tablets
+- **Mobile Friendly**: Works on phones, tablets, and desktops
+- **Generated Timestamp**: Date, time, and ISO timestamp of report generation
 
 ```bash
 # View the report
@@ -464,6 +523,28 @@ auth:
 
 ## Troubleshooting
 
+### Python 3 Verification
+
+First, verify you're running Python 3:
+
+```bash
+# Check Python version (macOS/Linux)
+python3 --version
+# Should show: Python 3.7 or higher
+
+# Check Python version (Windows)
+python --version
+# Should show: Python 3.7 or higher
+
+# Verify pip is Python 3
+pip3 --version
+# Should show: pip X.X from ... (python 3.X)
+
+# If using Windows, check which Python interpreter is default
+where python
+# Should show path to Python 3.x
+```
+
 ### Common Issues
 
 **Issue: `ImportError: No module named 'locust'`**
@@ -572,13 +653,51 @@ api-perf-framework/
 
 ### Python 3 Code Quality
 
-The framework uses Python 3 best practices:
-- **f-strings**: Clean string formatting
+The framework uses **modern Python 3 best practices** throughout:
+
+#### Language Features Used
+- **f-strings**: Clean string formatting (Python 3.6+)
+  ```python
+  # Instead of: "Date: {}".format(date)
+  print(f"Generated on: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+  ```
 - **Type hints**: In docstrings for clarity
-- **Context managers**: Proper resource handling (`with` statements)
-- **Exception handling**: Specific exception types
-- **Modern libraries**: subprocess, json, pathlib, datetime
-- **Virtual environments**: Supported for isolation
+  ```python
+  def parse_csv_reports(reports_dir="reports"):
+      """
+      Parse Locust CSV reports and extract metrics.
+      """
+  ```
+- **Context managers**: Proper resource handling
+  ```python
+  with open(stats_file) as f:
+      reader = csv.DictReader(f)
+  ```
+- **pathlib**: Modern path handling instead of os.path
+  ```python
+  from pathlib import Path
+  ```
+- **Walrus operator** (Python 3.8+): Assignment within expressions
+- **Dataclasses** (Python 3.7+): Clean data structures
+
+#### Standard Library Usage
+- **subprocess**: Modern subprocess execution with proper error handling
+- **json**: Built-in JSON parsing without external dependencies
+- **csv**: DictReader for clean CSV parsing
+- **datetime**: Native datetime handling with timezone support
+- **os**: Directory and file operations
+- **sys**: System-level operations
+
+#### Tested Python Versions
+| Version | Status | Notes |
+|---------|--------|-------|
+| 3.7 | ✅ Full Support | Minimum supported version |
+| 3.8 | ✅ Full Support | Excellent stability |
+| 3.9 | ✅ Full Support | Good performance |
+| 3.10 | ✅ Full Support | Performance improvements |
+| 3.11 | ✅ Full Support | Faster by default |
+| 3.12 | ✅ Full Support | Latest stable |
+| 3.13 | ✅ Full Support | Current preview (when stable) |
 
 ### Extending the Framework
 
