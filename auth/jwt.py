@@ -8,12 +8,16 @@ def get_jwt_token(config):
         config: Configuration dictionary containing host, auth details
         
     Returns:
-        JWT access token string
+        JWT access token string or empty string if no auth needed
         
     Raises:
         ValueError: If required config keys are missing
         Exception: If token request fails
     """
+    # Check if authentication is disabled
+    if config.get("auth", {}).get("type") == "none":
+        return ""
+    
     # Validate required configuration
     required_keys = ["host", "auth"]
     for key in required_keys:

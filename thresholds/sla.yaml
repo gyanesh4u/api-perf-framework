@@ -1,7 +1,3 @@
-Get Users:
+Get Comments:
   p95_ms: 800
   error_rate: 1
-
-Create User:
-  p95_ms: 1200
-  error_rate: 2

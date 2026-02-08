@@ -1,5 +1,5 @@
 from locust import task
-from .base_api_user import BaseApiUser
+from base_api_user import BaseApiUser
 import yaml
 import random
 

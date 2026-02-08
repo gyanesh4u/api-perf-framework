@@ -3,6 +3,7 @@ import yaml
 from auth.jwt import get_jwt_token
 
 class BaseApiUser(HttpUser):
+    abstract = True
     wait_time = between(1, 2)
 
     def on_start(self):
@@ -16,14 +17,15 @@ class BaseApiUser(HttpUser):
 
             self.host = self.config["host"]
             
-            # Obtain JWT token
+            # Obtain JWT token (if auth is enabled)
             token = get_jwt_token(self.config)
 
             # Set authorization headers
-            self.client.headers.update({
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
-            })
+            headers = {"Content-Type": "application/json"}
+            if token:
+                headers["Authorization"] = f"Bearer {token}"
+            
+            self.client.headers.update(headers)
         except Exception as e:
             raise Exception(f"Failed to initialize user: {e}")
 

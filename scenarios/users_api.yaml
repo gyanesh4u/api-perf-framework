@@ -1,15 +1,17 @@
-name: Users API Test
+name: JSONPlaceholder API Test
 
 requests:
+  - name: Get Comments
+    method: GET
+    endpoint: /comments
+    weight: 3
+    
+  - name: Get Posts
+    method: GET
+    endpoint: /posts
+    weight: 2
+    
   - name: Get Users
     method: GET
-    endpoint: /api/users
-    weight: 3
-
-  - name: Create User
-    method: POST
-    endpoint: /api/users
-    payload:
-      name: test
-      role: user
+    endpoint: /users
     weight: 1
