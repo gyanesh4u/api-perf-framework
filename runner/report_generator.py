@@ -64,9 +64,17 @@ def generate_html_report(metrics, stats):
     # Prepare data for charts
     endpoint_names = [m['name'] for m in metrics]
     endpoint_requests = [m['requests'] for m in metrics]
-    endpoint_avg_times = [m['average'] for m in metrics]
-    endpoint_p95_times = [m['p95'] for m in metrics]
-    endpoint_failures = [m['failure_rate'] for m in metrics]
+    endpoint_avg_times = [round(m['average'], 0) for m in metrics]
+    endpoint_p95_times = [round(m['p95'], 0) for m in metrics]
+    endpoint_failures = [round(m['failure_rate'], 2) for m in metrics]
+    
+    # Convert to JSON for JavaScript
+    import json as json_module
+    names_json = json_module.dumps(endpoint_names)
+    requests_json = json_module.dumps(endpoint_requests)
+    avg_times_json = json_module.dumps(endpoint_avg_times)
+    p95_times_json = json_module.dumps(endpoint_p95_times)
+    failures_json = json_module.dumps(endpoint_failures)
     
     html_content = f"""
     <!DOCTYPE html>
@@ -492,115 +500,115 @@ def generate_html_report(metrics, stats):
             
             // Request Distribution Chart
             const requestCtx = document.getElementById('requestChart').getContext('2d');
-            new Chart(requestCtx, {{
+            new Chart(requestCtx, {
                 type: 'doughnut',
-                data: {{
-                    labels: {json.dumps(endpoint_names)},
-                    datasets: [{{
-                        data: {json.dumps(endpoint_requests)},
+                data: {
+                    labels: """ + names_json + """,
+                    datasets: [{
+                        data: """ + requests_json + """,
                         backgroundColor: colors,
                         borderColor: colors,
                         borderWidth: 2
-                    }}]
-                }},
-                options: {{
+                    }]
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {{
-                        legend: {{
+                    plugins: {
+                        legend: {
                             position: 'bottom'
-                        }}
-                    }}
-                }}
-            }});
+                        }
+                    }
+                }
+            });
             
             // Average Response Time Chart
             const avgTimeCtx = document.getElementById('avgTimeChart').getContext('2d');
-            new Chart(avgTimeCtx, {{
+            new Chart(avgTimeCtx, {
                 type: 'bar',
-                data: {{
-                    labels: {json.dumps(endpoint_names)},
-                    datasets: [{{
+                data: {
+                    labels: """ + names_json + """,
+                    datasets: [{
                         label: 'Avg Response Time (ms)',
-                        data: {json.dumps([round(t, 0) for t in endpoint_avg_times])},
+                        data: """ + avg_times_json + """,
                         backgroundColor: colors[0],
                         borderColor: colors[0],
                         borderWidth: 2
-                    }}]
-                }},
-                options: {{
+                    }]
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {{
-                        y: {{
+                    scales: {
+                        y: {
                             beginAtZero: true,
-                            title: {{
+                            title: {
                                 display: true,
                                 text: 'Response Time (ms)'
-                            }}
-                        }}
-                    }}
-                }}
-            }});
+                            }
+                        }
+                    }
+                }
+            });
             
             // P95 Response Time Chart
             const p95Ctx = document.getElementById('p95Chart').getContext('2d');
-            new Chart(p95Ctx, {{
+            new Chart(p95Ctx, {
                 type: 'bar',
-                data: {{
-                    labels: {json.dumps(endpoint_names)},
-                    datasets: [{{
+                data: {
+                    labels: """ + names_json + """,
+                    datasets: [{
                         label: 'P95 Response Time (ms)',
-                        data: {json.dumps([round(t, 0) for t in endpoint_p95_times])},
+                        data: """ + p95_times_json + """,
                         backgroundColor: colors[1],
                         borderColor: colors[1],
                         borderWidth: 2
-                    }}]
-                }},
-                options: {{
+                    }]
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {{
-                        y: {{
+                    scales: {
+                        y: {
                             beginAtZero: true,
-                            title: {{
+                            title: {
                                 display: true,
                                 text: 'Response Time (ms)'
-                            }}
-                        }}
-                    }}
-                }}
-            }});
+                            }
+                        }
+                    }
+                }
+            });
             
             // Failure Rate Chart
             const failureCtx = document.getElementById('failureChart').getContext('2d');
-            new Chart(failureCtx, {{
+            new Chart(failureCtx, {
                 type: 'bar',
-                data: {{
-                    labels: {json.dumps(endpoint_names)},
-                    datasets: [{{
+                data: {
+                    labels: """ + names_json + """,
+                    datasets: [{
                         label: 'Failure Rate (%)',
-                        data: {json.dumps([round(f, 2) for f in endpoint_failures])},
+                        data: """ + failures_json + """,
                         backgroundColor: colors[2],
                         borderColor: colors[2],
                         borderWidth: 2
-                    }}]
-                }},
-                options: {{
+                    }]
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {{
-                        y: {{
+                    scales: {
+                        y: {
                             beginAtZero: true,
                             max: 100,
-                            title: {{
+                            title: {
                                 display: true,
                                 text: 'Failure Rate (%)'
-                            }}
-                        }}
-                    }}
-                }}
-            }});
+                            }
+                        }
+                    }
+                }
+            });
         </script>
     </body>
     </html>

@@ -36,8 +36,8 @@ A comprehensive performance testing framework built on Locust for load testing A
 ## Quick Start
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+# 1. Install dependencies (Python 3 required)
+pip3 install -r requirements.txt
 
 # 2. Update configuration
 # Edit config/env.yaml with your API endpoint and credentials
@@ -48,8 +48,8 @@ pip install -r requirements.txt
 # 4. Set SLA thresholds
 # Edit thresholds/sla.yaml with your performance requirements
 
-# 5. Run tests
-python runner/run.py
+# 5. Run tests with Python 3
+python3 runner/run.py
 ```
 
 ## Overview
@@ -203,9 +203,9 @@ auth:
 
 ## Running Tests
 
-### Quick Start
+### Quick Start with Python 3
 ```bash
-python runner/run.py
+python3 runner/run.py
 ```
 
 This command will:
@@ -231,7 +231,7 @@ After tests complete, the framework automatically validates results against defi
 
 Run manual validation:
 ```bash
-python runner/validate.py
+python3 runner/validate.py
 ```
 
 ### Report Organization
@@ -457,10 +457,10 @@ This is useful when:
 If you need to access reports without a GUI:
 
 ```bash
-# Quick console summary
-python -m runner.report_generator
+# Quick console summary with Python 3
+python3 -m runner.report_generator
 
-# Extract metrics from JSON
+# Extract metrics from JSON using Python 3
 python3 -c "
 import json
 with open('reports/performance_report.json') as f:
@@ -735,7 +735,7 @@ def get_oauth_token(config):
 
 1. Modify `runner/report_generator.py` to add new metrics
 2. Update HTML template to display new metrics
-3. Regenerate reports with `python -m runner.report_generator`
+3. Regenerate reports with `python3 -m runner.report_generator`
 
 ### Testing Locally
 
