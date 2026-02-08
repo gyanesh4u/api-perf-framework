@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-02-08T14:03:36.896533",
+  "summary": {
+    "total_requests": 1472,
+    "total_failures": 0,
+    "success_rate": 100.0,
+    "avg_response_time": 141.37692698640768,
+    "max_response_time": 2805.465166000431,
+    "min_response_time": 82.36949999991339,
+    "p95_response_time": 340.0,
+    "p99_response_time": 1400.0
+  },
+  "metrics": [
+    {
+      "name": "Get Comments",
+      "method": "GET",
+      "requests": 723,
+      "failures": 0,
+      "median": 100.0,
+      "average": 152.4477617537941,
+      "min": 82.36949999991339,
+      "max": 2805.465166000431,
+      "p95": 340.0,
+      "p99": 1400.0,
+      "failure_rate": 0.0
+    },
+    {
+      "name": "Get Posts",
+      "method": "GET",
+      "requests": 489,
+      "failures": 0,
+      "median": 100.0,
+      "average": 118.8722627423268,
+      "min": 82.65883300009591,
+      "max": 815.2202089995626,
+      "p95": 270.0,
+      "p99": 530.0,
+      "failure_rate": 0.0
+    },
+    {
+      "name": "Get Users",
+      "method": "GET",
+      "requests": 260,
+      "failures": 0,
+      "median": 100.0,
+      "average": 152.9175703653891,
+      "min": 82.67716699992889,
+      "max": 2277.472666999529,
+      "p95": 260.0,
+      "p99": 1400.0,
+      "failure_rate": 0.0
+    }
+  ]
+}

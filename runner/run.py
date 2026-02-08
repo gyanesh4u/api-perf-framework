@@ -1,12 +1,21 @@
 import subprocess
 import sys
 import os
+from datetime import datetime
 
 def run_tests():
     """
     Execute Locust performance tests and validate against SLA.
     """
-    os.makedirs("reports", exist_ok=True)
+    # Create timestamped report folder
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    reports_dir = f"reports/{timestamp}"
+    os.makedirs(reports_dir, exist_ok=True)
+    
+    # Verify directory was created
+    if not os.path.exists(reports_dir):
+        print(f"❌ Failed to create reports directory: {reports_dir}")
+        sys.exit(1)
 
     print("Starting performance tests...")
 
@@ -18,8 +27,8 @@ def run_tests():
         "-r", "5",
         "-t", "60s",
         "--host", "https://jsonplaceholder.typicode.com",
-        "--html", "reports/report.html",
-        "--csv", "reports/results",
+        "--html", f"{reports_dir}/report.html",
+        "--csv", f"{reports_dir}/results",
         "--exit-code-on-error", "1"
     ])
 
@@ -28,17 +37,17 @@ def run_tests():
         sys.exit(1)
 
     print("\n✅ Performance tests completed")
-    print("Reports generated in reports/ directory")
+    print(f"Reports generated in {reports_dir}/ directory")
     
     # Generate comprehensive report
     print("\n📊 Generating comprehensive report...")
     from report_generator import create_comprehensive_report
-    create_comprehensive_report()
+    create_comprehensive_report(reports_dir)
 
     # Run SLA validation
     print("\nValidating against SLA thresholds...")
     from validate import validate_sla
-    validate_sla()
+    validate_sla(reports_dir)
 
 if __name__ == "__main__":
     run_tests()

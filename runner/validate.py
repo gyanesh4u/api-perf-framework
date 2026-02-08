@@ -3,14 +3,14 @@ import yaml
 import sys
 import os
 
-def validate_sla():
+def validate_sla(reports_dir="reports"):
     """
     Validate that test results meet SLA thresholds.
     
     Checks both p95 response time and error rate against thresholds.
     """
     # Check if report file exists
-    report_file = "reports/results_stats.csv"
+    report_file = f"{reports_dir}/results_stats.csv"
     if not os.path.exists(report_file):
         print(f"Error: Report file not found at {report_file}")
         print("Make sure to run the tests first with: python runner/run.py")
